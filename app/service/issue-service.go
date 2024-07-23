@@ -34,6 +34,10 @@ func (i IssueServiceImpl) CreateIssue(c *gin.Context) models.Issue {
 		log.Error("Error when binding data. Error: ", err)
 		util.PanicException(constant.InvalidRequest)
 	}
+	//request.CreatedBy = "Admin"
+	//request.UpdatedBy = "Admin"
+	//request.CreatedAt = time.Now()
+	//request.UpdatedAt = time.Now()
 	data, err := i.issueRepo.Save(&request)
 	if err != nil {
 		log.Error("Happened error when save data to database. Error: ", err)

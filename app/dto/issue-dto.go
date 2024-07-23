@@ -2,17 +2,18 @@ package dto
 
 import (
 	"github.com/Savitar465/task-manager/app/models"
-	"time"
 )
 
 type IssueResponse struct {
-	ID          int       `json:"id"`
-	TypeId      string    `json:"typeId"`
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	StartDate   time.Time `json:"startDate"`
-	DueDate     time.Time `json:"dueDate"`
-	Assignee    string    `json:"assignee"`
+	ID          int    `json:"id"`
+	TypeId      string `json:"typeId"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	StartDate   string `json:"startDate"`
+	DueDate     string `json:"dueDate"`
+	StageId     string `json:"stageId"`
+	BoardId     string `json:"boardId"`
+	Assignee    string `json:"assignee"`
 	models.BaseModel
 }
 
