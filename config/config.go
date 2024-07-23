@@ -1,8 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+)
 
-func Init() error {
+func InitViper() error {
 	viper.AddConfigPath("./config")
 	viper.SetConfigName("config")
 

@@ -1,1 +1,11 @@
 port: 7070
+
+database:
+  host: localhost
+  port: 3306
+  user: root
+  db: task_db
+  password: Savitar@123
+
+logging:
+    level: DEBUG
