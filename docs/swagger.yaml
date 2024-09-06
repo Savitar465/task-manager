@@ -1,4 +1,62 @@
 basePath: /api/v1
+definitions:
+  dto.IssueRequest:
+    properties:
+      assignee:
+        type: string
+      boardId:
+        type: string
+      description:
+        type: string
+      dueDate:
+        type: string
+      stageId:
+        type: string
+      startDate:
+        type: string
+      title:
+        type: string
+      typeId:
+        type: string
+    required:
+    - assignee
+    - boardId
+    - description
+    - dueDate
+    - stageId
+    - startDate
+    - title
+    - typeId
+    type: object
+  dto.IssueResponse:
+    properties:
+      assignee:
+        type: string
+      boardId:
+        type: string
+      createdAt:
+        type: string
+      createdBy:
+        type: string
+      description:
+        type: string
+      dueDate:
+        type: string
+      id:
+        type: integer
+      stageId:
+        type: string
+      startDate:
+        type: string
+      title:
+        type: string
+      typeId:
+        type: string
+      updatedAt:
+        type: string
+      updatedBy:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -16,13 +74,47 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /issues/{id}:
+  /issues:
     get:
+      description: get all issues
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.IssueResponse'
+            type: array
+      summary: Get all issues
+      tags:
+      - issues
+    post:
       consumes:
       - application/json
-      description: get string by ID
+      description: Create a new issue using the provided IssueRequest
       parameters:
-      - description: Account ID
+      - description: Issue Request
+        in: body
+        name: issue
+        required: true
+        schema:
+          $ref: '#/definitions/dto.IssueRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Created issue
+          schema:
+            $ref: '#/definitions/dto.IssueResponse'
+      summary: Create an Issue
+      tags:
+      - issues
+  /issues/{id}:
+    delete:
+      description: Delete an issue by its ID
+      parameters:
+      - description: Issue ID
         in: path
         name: id
         required: true
@@ -31,12 +123,10 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
-          schema:
-            type: string
-      summary: Show an account
+          description: Issue deleted
+      summary: Delete an Issue
       tags:
-      - accounts
+      - issues
 securityDefinitions:
   BasicAuth:
     type: basic

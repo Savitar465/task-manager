@@ -9,9 +9,9 @@ import (
 
 type IssueRepository interface {
 	Save(issue *models.Issue) (models.Issue, error)
-	FindIssueById() string
+	FindIssueById(issueId string) models.Issue
 	FindAllIssues(ctx context.Context) ([]models.Issue, error)
-	DeleteUserById() error
+	DeleteUserById() (string, error)
 }
 
 type IssueRepositoryImpl struct {
@@ -42,10 +42,21 @@ func (i IssueRepositoryImpl) Save(issue *models.Issue) (models.Issue, error) {
 	return *issue, nil
 }
 
-func (i IssueRepositoryImpl) FindIssueById() string {
-	return "Get Issue"
+func (i IssueRepositoryImpl) FindIssueById(issueId string) models.Issue {
+	log.Info("start to execute program get data user {}", issueId)
+	//var err = i.db.Find(&models.Issue{}, idIssue)
+	//if err != nil {
+	//	log.Error("Error when get data. Error: ", err)
+	//
+	//}
+	return models.Issue{}
 }
 
-func (i IssueRepositoryImpl) DeleteUserById() error {
-	return nil
+func (i IssueRepositoryImpl) DeleteUserById() (string, error) {
+	var err = i.db.Delete(&models.Issue{}).Error
+	if err != nil {
+		log.Error("Error when delete data. Error: ", err)
+		return "Error when delete data", err
+	}
+	return "Issue Deleted", nil
 }

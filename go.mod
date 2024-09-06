@@ -4,6 +4,7 @@ go 1.22.5
 
 require (
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
+	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/wire v0.6.0
 	github.com/sirupsen/logrus v1.9.3

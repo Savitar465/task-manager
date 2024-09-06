@@ -17,6 +17,17 @@ type IssueResponse struct {
 	models.BaseModel
 }
 
+type IssueRequest struct {
+	TypeId      string `json:"typeId" binding:"required"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	StartDate   string `json:"startDate" binding:"required"`
+	DueDate     string `json:"dueDate" binding:"required"`
+	StageId     string `json:"stageId" binding:"required"`
+	BoardId     string `json:"boardId" binding:"required"`
+	Assignee    string `json:"assignee" binding:"required"`
+}
+
 func ModelToResponse(issue models.Issue) IssueResponse {
 	return IssueResponse{
 		ID:          issue.ID,
