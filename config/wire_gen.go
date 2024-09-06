@@ -7,21 +7,16 @@
 package config
 
 import (
-	"fmt"
 	"github.com/Savitar465/task-manager/app/controller"
 	"github.com/Savitar465/task-manager/app/repository"
 	"github.com/Savitar465/task-manager/app/service"
 	"github.com/google/wire"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 // Injectors from injector.go:
 
 func InitApp() *Initialization {
-	gormDB := ConnectToDB()
+	gormDB := InitDB()
 	issueRepositoryImpl := repository.IssueRepositoryInit(gormDB)
 	issueServiceImpl := service.IssueServiceInit(issueRepositoryImpl)
 	issueControllerImpl := controller.IssueControllerrInit(issueServiceImpl)
@@ -31,36 +26,6 @@ func InitApp() *Initialization {
 
 // injector.go:
 
-var db = wire.NewSet(ConnectToDB)
+var dbsql = InitDB
 
-var issueServiceSet = wire.NewSet(service.IssueServiceInit, wire.Bind(new(service.IssueService), new(*service.IssueServiceImpl)))
-
-var issueRepoSet = wire.NewSet(repository.IssueRepositoryInit, wire.Bind(new(repository.IssueRepository), new(*repository.IssueRepositoryImpl)))
-
-var issueCtrlSet = wire.NewSet(controller.IssueControllerrInit, wire.Bind(new(controller.IssueController), new(*controller.IssueControllerImpl)))
-
-func ConnectToDB() *gorm.DB {
-
-	username := viper.GetString("database.user")
-	password := viper.GetString("database.password")
-	host := viper.GetString("database.host")
-	port := viper.GetString("database.port")
-	database := viper.GetString("database.db")
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, database)
-	db2, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		logrus.Fatalf("Failed to connect to database: %v", err)
-	}
-
-	sqlDB, err := db2.DB()
-	if err != nil {
-		logrus.Fatalf("Failed to get database connection: %v", err)
-	}
-
-	err = sqlDB.Ping()
-	if err != nil {
-		logrus.Fatalf("Failed to ping database: %v", err)
-	}
-	fmt.Println("Connected to database with GORM!")
-	return db2
-}
+var db = wire.NewSet(dbsql)

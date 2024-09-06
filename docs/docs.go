@@ -24,9 +24,30 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/issues/{id}": {
+        "/issues": {
             "get": {
-                "description": "get string by ID",
+                "description": "get all issues",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "issues"
+                ],
+                "summary": "Get all issues",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.IssueResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new issue using the provided IssueRequest",
                 "consumes": [
                     "application/json"
                 ],
@@ -34,13 +55,44 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "accounts"
+                    "issues"
                 ],
-                "summary": "Show an account",
+                "summary": "Create an Issue",
+                "parameters": [
+                    {
+                        "description": "Issue Request",
+                        "name": "issue",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.IssueRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Created issue",
+                        "schema": {
+                            "$ref": "#/definitions/dto.IssueResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/issues/{id}": {
+            "delete": {
+                "description": "Delete an issue by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "issues"
+                ],
+                "summary": "Delete an Issue",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Account ID",
+                        "description": "Issue ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -48,11 +100,93 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "description": "Issue deleted"
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.IssueRequest": {
+            "type": "object",
+            "required": [
+                "assignee",
+                "boardId",
+                "description",
+                "dueDate",
+                "stageId",
+                "startDate",
+                "title",
+                "typeId"
+            ],
+            "properties": {
+                "assignee": {
+                    "type": "string"
+                },
+                "boardId": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "dueDate": {
+                    "type": "string"
+                },
+                "stageId": {
+                    "type": "string"
+                },
+                "startDate": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "typeId": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.IssueResponse": {
+            "type": "object",
+            "properties": {
+                "assignee": {
+                    "type": "string"
+                },
+                "boardId": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "createdBy": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "dueDate": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "stageId": {
+                    "type": "string"
+                },
+                "startDate": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "typeId": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "updatedBy": {
+                    "type": "string"
                 }
             }
         }

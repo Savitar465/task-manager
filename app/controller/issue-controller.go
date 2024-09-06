@@ -20,19 +20,14 @@ type IssueControllerImpl struct {
 	service issueService.IssueService
 }
 
-//func NewHandler() *IssueController {
-//	return &IssueController{
-//		service: issueService.NewIssueService(),
-//	}
-//}
-
 // GetAll ShowIssues godoc
-// @Summary      Get all issues
-// @Description  get all issues
-// @Tags         issues
-// @Produce      json
-// @Success      200  {[]dto.IssueResponse}  Response
-// @Router       /issues [get]
+//
+//	@Summary		Get all issues
+//	@Description	get all issues
+//	@Tags			issues
+//	@Produce		json
+//	@Success		200	{array} dto.IssueResponse
+//	@Router			/issues [get]
 func (h *IssueControllerImpl) GetAll(c *gin.Context) {
 	issues, err := h.service.GetAllIssues(c)
 	if err != nil {
@@ -46,11 +41,30 @@ func (h *IssueControllerImpl) GetAll(c *gin.Context) {
 	}
 }
 
+// Create Post ShowIssues godoc
+//
+// @Summary      Create an Issue
+// @Description  Create a new issue using the provided IssueRequest
+// @Tags         issues
+// @Accept       json
+// @Produce      json
+// @Param        issue  body  dto.IssueRequest  true  "Issue Request"
+// @Success      200    {object}  dto.IssueResponse  "Created issue"
+// @Router       /issues [post]
 func (h *IssueControllerImpl) Create(c *gin.Context) {
 	issue := h.service.CreateIssue(c)
 	c.JSON(http.StatusOK, util.BuildResponse(constant.Success, dto.ModelToResponse(issue)))
 }
 
+// Delete removes an issue.
+//
+// @Summary      Delete an Issue
+// @Description  Delete an issue by its ID
+// @Tags         issues
+// @Produce      json
+// @Param        id  path  int  true  "Issue ID"
+// @Success      200 "Issue deleted"
+// @Router       /issues/{id} [delete]
 func (h *IssueControllerImpl) Delete(c *gin.Context) {
 
 	c.Status(http.StatusOK)
