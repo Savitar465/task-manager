@@ -13,6 +13,7 @@ import (
 type IssueController interface {
 	GetAll(c *gin.Context)
 	Create(c *gin.Context)
+	Update(c *gin.Context)
 	Delete(c *gin.Context)
 }
 
@@ -53,6 +54,28 @@ func (h *IssueControllerImpl) GetAll(c *gin.Context) {
 // @Router       /issues [post]
 func (h *IssueControllerImpl) Create(c *gin.Context) {
 	issue := h.service.CreateIssue(c)
+	if c.IsAborted() {
+		return
+	}
+	c.JSON(http.StatusOK, util.BuildResponse(constant.Success, dto.ModelToResponse(issue)))
+}
+
+// Update Put updates an issue.
+//
+// @Summary      Update an Issue
+// @Description  Update an issue using the provided IssueRequest
+// @Tags         issues
+// @Accept       json
+// @Produce      json
+// @Param        id  path  int  true  "Issue ID"
+// @Param        issue  body  dto.IssueResponse  true  "Issue Response"
+// @Success      200    {object}  dto.IssueResponse  "Updated issue"
+// @Router       /issues/{id} [put]
+func (h *IssueControllerImpl) Update(c *gin.Context) {
+	issue := h.service.UpdateIssue(c.Param("idIssue"), c)
+	if c.IsAborted() {
+		return
+	}
 	c.JSON(http.StatusOK, util.BuildResponse(constant.Success, dto.ModelToResponse(issue)))
 }
 
@@ -66,7 +89,6 @@ func (h *IssueControllerImpl) Create(c *gin.Context) {
 // @Success      200 "Issue deleted"
 // @Router       /issues/{id} [delete]
 func (h *IssueControllerImpl) Delete(c *gin.Context) {
-
 	c.Status(http.StatusOK)
 }
 

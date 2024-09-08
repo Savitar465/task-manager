@@ -23,6 +23,7 @@ func RegisterHTTPEndpoints(router *gin.RouterGroup, init *Initialization) {
 	issues := router.Group("/issues")
 	{
 		issues.POST("", init.IssueCtrl.Create)
+		issues.PUT("/:idIssue", init.IssueCtrl.Update)
 		issues.GET("", init.IssueCtrl.GetAll)
 		issues.DELETE("", init.IssueCtrl.Delete)
 	}
