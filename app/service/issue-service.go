@@ -15,7 +15,7 @@ import (
 type IssueService interface {
 	CreateIssue(c *gin.Context) models.Issue
 	GetAllIssues(c *gin.Context) ([]models.Issue, error)
-	DeleteIssue()
+	DeleteIssue(c *gin.Context, id uint)
 }
 
 type IssueServiceImpl struct {
@@ -68,6 +68,13 @@ func (i IssueServiceImpl) GetAllIssues(c *gin.Context) ([]models.Issue, error) {
 	return data, nil
 }
 
-func (i IssueServiceImpl) DeleteIssue() {
-	fmt.Println("Hi Delete")
+func (i IssueServiceImpl) DeleteIssue(c *gin.Context, id uint) {
+	defer util.PanicHandler(c)
+	log.Info("start to execute program delete issue by id")
+	err := i.issueRepo.DeleteById(id)
+	if err != nil {
+		log.Error("Happened error when delete data from database. Error: ", err)
+		util.PanicException(constant.UnknownError)
+	}
+	// No explicit return on success, following the panic pattern
 }
