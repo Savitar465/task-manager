@@ -11,7 +11,7 @@ type IssueRepository interface {
 	Save(issue *models.Issue) (models.Issue, error)
 	FindIssueById(issueId string) models.Issue
 	FindAllIssues(ctx context.Context) ([]models.Issue, error)
-	DeleteUserById() (string, error)
+	DeleteById(id uint) error
 }
 
 type IssueRepositoryImpl struct {
@@ -52,11 +52,12 @@ func (i IssueRepositoryImpl) FindIssueById(issueId string) models.Issue {
 	return models.Issue{}
 }
 
-func (i IssueRepositoryImpl) DeleteUserById() (string, error) {
-	var err = i.db.Delete(&models.Issue{}).Error
-	if err != nil {
-		log.Error("Error when delete data. Error: ", err)
-		return "Error when delete data", err
-	}
-	return "Issue Deleted", nil
-}
+// TODO: Implement DeleteById for IssueRepositoryImpl
+// func (i IssueRepositoryImpl) DeleteById(id uint) error {
+// 	var err = i.db.Delete(&models.Issue{}, id).Error
+// 	if err != nil {
+// 		log.Error("Error when delete data. Error: ", err)
+// 		return err
+// 	}
+// 	return nil
+// }

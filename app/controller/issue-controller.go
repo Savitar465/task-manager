@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 )
 
 type IssueController interface {
@@ -63,11 +64,32 @@ func (h *IssueControllerImpl) Create(c *gin.Context) {
 // @Tags         issues
 // @Produce      json
 // @Param        id  path  int  true  "Issue ID"
-// @Success      200 "Issue deleted"
+// @Success      200 {object} util.ApiResponse "Issue deleted successfully"
+// @Failure      400 {object} util.ApiResponse "Invalid ID format"
+// @Failure      500 {object} util.ApiResponse "Internal server error"
 // @Router       /issues/{id} [delete]
 func (h *IssueControllerImpl) Delete(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 32) // Assuming ID fits in uint32
+	if err != nil {
+		log.Error("Invalid ID format: ", err)
+		c.JSON(http.StatusBadRequest, util.BuildErrorResponse("Invalid ID format", err.Error(), nil))
+		return
+	}
 
-	c.Status(http.StatusOK)
+	// The service method DeleteIssue has its own PanicHandler for service/repository errors.
+	// If DeleteIssue panics, its PanicHandler will write the response.
+	// If it completes without panic, then this controller code will execute.
+	h.service.DeleteIssue(c, uint(id))
+
+	// If service.DeleteIssue panics, PanicHandler in service writes response, and this line might not be reached
+	// or Gin's recovery might have already finalized the response.
+	// However, if DeleteIssue is successful (no panic), we should confirm the response.
+	// Check if response has already been written by PanicHandler.
+	// If service.DeleteIssue calls PanicHandler which calls c.JSON, then c.Writer.Written() will be true.
+	if !c.Writer.Written() {
+		c.JSON(http.StatusOK, util.BuildResponse(constant.Success, nil))
+	}
 }
 
 func IssueControllerrInit(issueSrv issueService.IssueService) *IssueControllerImpl {
